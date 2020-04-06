@@ -14,17 +14,47 @@ def report_data(targets, allocations, total):
         result[asset_class] = list()
         for subclass in allocations.asset_subclasses(asset_class):
             value = allocations.value_for_class_subclass(asset_class, subclass)
-            percentage = allocations.percentage_for_class_subclass(asset_class,
-                                                                   subclass)
-            target = targets.get(subclass, 0)
-            diff = cash_difference(target, percentage, total)
+            cost = allocations.cost_for_class_subclass(asset_class, subclass)
+            pnl = allocations.pnl_for_class_subclass(asset_class, subclass)
+            pnl_percentage = allocations.pnl_percentage_for_class_subclass(asset_class,
+                                                                           subclass)
+            # percentage = allocations.percentage_for_class_subclass(asset_class,
+            #                                                        subclass)
+            # target = targets.get(subclass, 0)
+            # diff = cash_difference(target, percentage, total)
             line = list()
             line.append(subclass)
+            line.append(float(cost))
             line.append(float(value))
-            line.append(float(percentage))
-            line.append(float(target))
-            line.append(float(diff))
+            line.append(float(pnl))
+            line.append(float(pnl_percentage))
+            # line.append(float(percentage))
+            # line.append(float(target))
+            # line.append(float(diff))
             result[asset_class].append(line)
+        value = allocations.value_for_class(asset_class)
+        cost = allocations.cost_for_class(asset_class)
+        pnl = allocations.pnl_for_class(asset_class)
+        pnl_percentage = allocations.pnl_percentage_for_class(asset_class)
+        line = list()
+        line.append('SUM')
+        line.append(float(cost))
+        line.append(float(value))
+        line.append(float(pnl))
+        line.append(float(pnl_percentage))
+        result[asset_class].append(line)
+    result['TOTAL'] = list()
+    value = allocations.total_invested_for_portfolio()
+    cost = allocations.total_cost_for_portfolio()
+    pnl = allocations.total_pnl()
+    pnl_percentage = allocations.total_pnl_percentage()
+    line = list()
+    line.append('SUM')
+    line.append(float(cost))
+    line.append(float(value))
+    line.append(float(pnl))
+    line.append(float(pnl_percentage))
+    result['TOTAL'].append(line)
     return result
 
 
@@ -32,11 +62,12 @@ def report(bean, portfolio):
     targets, allocations, total = loader.load(bean, portfolio)
     data = report_data(targets, allocations, total)
 
-    head = ["Subclass", "Market Value", "Percentage", "Target %", "Difference"]
+    #head = ["Subclass", "Book Value", "Market Value", "PnL", "PnL%", "Percentage", "Target %", "Difference"]
+    head = ["Subclass", "Book Value", "Market Value", "PnL", "PnL %"]
     report = ""
     first = True
 
-    for asset_class in sorted(data):
+    for asset_class in data:
         if not first:
             report += "\n\n"
         else:
