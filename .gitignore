@@ -1,8 +1,10 @@
 build/
 dist/
+.idea/
 *.egg-info
 *.eggs
 __pycache__
 .coverage
 *.swp
 .tox
+tags.lock
