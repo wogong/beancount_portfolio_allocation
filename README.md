@@ -1,11 +1,11 @@
-beancount_portfolio_allocation
+beancount_portfolio_report
 ==============================
 
-Reports on portfolio asset allocations in beancount. Useful for risk analysis
-and for rebalancing purposes.
+### Note
+This repo is forked from [beancount_portfolio_allocation](https://github.com/ghislainbourgeois/beancount_portfolio_allocation)
+minor changes are made for portfolio performance report.
 
-[![Build Status](https://travis-ci.org/ghislainbourgeois/beancount_portfolio_allocation.svg?branch=master)](http://travis-ci.org/ghislainbourgeois/beancount_portfolio_allocation)
-[![Coverage Status](https://coveralls.io/repos/github/ghislainbourgeois/beancount_portfolio_allocation/badge.svg?branch=master)](https://coveralls.io/github/ghislainbourgeois/beancount_portfolio_allocation?branch=master)
+Reports on portfolio performance in beancount. Useful for risk analysis.
 
 Installation
 ------------
@@ -16,17 +16,11 @@ Installation
 $ python3 setup.py install
 ```
 
-### PIP
-
-```bash
-$ pip install beancount_portfolio_allocation
-```
-
 Usage
 -----
 
 ```text
-usage: Report on portfolio asset classes allocation vs targets.
+usage: Report on portfolio asset classes.
        [-h] --portfolio PORTFOLIO bean
 
 positional arguments:
@@ -41,27 +35,38 @@ optional arguments:
 ### Example
 
 ```bash
-$ bean-portfolio-allocation-report ledger.beancount --portfolio pension
+$ bean-portfolio-allocation-report ledger.beancount --portfolio default
+BOND
+====
+Subclass            Book Value    Market Value    PnL    PnL %
+----------------  ------------  --------------  -----  -------
+Domestic Bond             0.00            0.00   0.00     0.00
+Overseas Bond             0.00            0.00   0.00     0.00
+SUM                       0.00            0.00   0.00     0.00
+
+
+STOCK
+=====
+Subclass             Book Value    Market Value    PnL    PnL %
+----------------   ------------  --------------  -----  -------
+Domestic Stock             0.00            0.00   0.00     0.00
+Overseas Stock             0.00            0.00   0.00     0.00
+SUM                        0.00            0.00   0.00     0.00
+
+
 CASH
 ====
-Subclass      Market Value    Percentage    Target %    Difference
-----------  --------------  ------------  ----------  ------------
-cash                380.00         19.00        0.00       -380.00
+Subclass      Book Value    Market Value    PnL    PnL %
+----------  ------------  --------------  -----  -------
+CNY                 0.00            0.00   0.00     0.00
+SUM                 0.00            0.00   0.00     0.00
 
 
-EQUITY
-======
-Subclass      Market Value    Percentage    Target %    Difference
-----------  --------------  ------------  ----------  ------------
-ca-stock            700.00         35.00       30.00       -100.00
-us-stock            600.00         30.00       30.00          0.00
-
-
-FIXED
+TOTAL
 =====
-Subclass      Market Value    Percentage    Target %    Difference
-----------  --------------  ------------  ----------  ------------
-ca-bond             320.00         16.00       40.00        480.00
+Subclass      Book Value    Market Value     PnL    PnL %
+----------  ------------  --------------  ------  -------
+SUM                 0.00            0.00    0.00     0.00
 ```
 
 
@@ -130,18 +135,3 @@ This is use in particular for managed retirement accounts.
   asset-class: "fixed-income"
   asset-subclass: "ca-bond"
 ```
-
-### Target allocations
-
-You can currently define your target allocation percentages for different asset
-subclasses in a portfolio using custom directives. There can currently be only
-one directive for the same portfolio and asset subclass. Missing allocation
-targets will be assumed to be 0%. An example 60/40 portfolio target might look
-like this (*NOT* a financial advice):
-
-```beancount
-2018-06-14 custom "allocation" "pension" "ca-stock" 30
-2018-06-14 custom "allocation" "pension" "us-stock" 30
-2018-06-14 custom "allocation" "pension" "ca-bond" 40
-```
-
